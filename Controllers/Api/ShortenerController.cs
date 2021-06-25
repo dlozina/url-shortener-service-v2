@@ -3,6 +3,7 @@ using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Shortener.Service.DTO;
 using Shortener.Service.Model;
 using Shortener.Service.Services.Interface;
 using System;
@@ -40,9 +41,10 @@ namespace Shortener.Service.Controllers.Api
             {
                 var db = _context.GetCollection<UrlData>();
                 var id = _urlHelper.GetId(shortUrl);
-                var dbEntry = db.Find(p => p.Id == id).FirstOrDefault();
 
-                return Ok(dbEntry);
+                UrlDataDto urlDataDto = new UrlDataDto() { Url = db.Find(p => p.Id == id).FirstOrDefault().Url };
+
+                return Ok(urlDataDto);
             }
             catch (Exception ex)
             {
@@ -68,10 +70,10 @@ namespace Shortener.Service.Controllers.Api
                 var db = _context.GetCollection<UrlData>(BsonAutoId.Int32);
                 var newEntry = new UrlData { Url = url.Url };
                 var id = db.Insert(newEntry);
+                
+                UrlDataDto urlDataDto = new UrlDataDto() { Url = $"{this.Request.Scheme}://{this.Request.Host}/{_urlHelper.GetShortUrl(id.AsInt32)}" };
 
-                var shortenUrl = $"{this.Request.Scheme}://{this.Request.Host}/{_urlHelper.GetShortUrl(id.AsInt32)}";
-
-                return Created("shortUrl", shortenUrl);
+                return Created("shortUrl", urlDataDto);
             }
             catch (Exception ex)
             {
