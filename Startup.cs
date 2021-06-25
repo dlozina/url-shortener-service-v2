@@ -74,6 +74,7 @@ namespace Shortener.Service
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                //endpoints.MapAreaControllerRoute
             });
         }
     }

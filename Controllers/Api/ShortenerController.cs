@@ -2,6 +2,7 @@
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Shortener.Service.Model;
 using Shortener.Service.Services.Interface;
 using System;
@@ -13,7 +14,6 @@ using IUrlHelper = Shortener.Service.Services.Interface.IUrlHelper;
 
 namespace Shortener.Service.Controllers.Api
 {
-    [Route("shorten")]
     [ApiController]
     public class ShortenerController : ControllerBase
     {
@@ -30,8 +30,8 @@ namespace Shortener.Service.Controllers.Api
             _context = context;
         }
 
-        [HttpGet]
-        public IActionResult GetAllContacts(string shortUrl = "")
+        [HttpGet("{shortUrl}")]
+        public IActionResult GetUrl(string shortUrl)
         {
             if (String.IsNullOrEmpty(shortUrl))
                 return BadRequest();
@@ -40,9 +40,9 @@ namespace Shortener.Service.Controllers.Api
             {
                 var db = _context.GetCollection<UrlData>();
                 var id = _urlHelper.GetId(shortUrl);
-                var entry = db.Find(p => p.Id == id).FirstOrDefault();
+                var dbEntry = db.Find(p => p.Id == id).FirstOrDefault();
 
-                return Ok();
+                return Ok(dbEntry);
             }
             catch (Exception ex)
             {
@@ -51,8 +51,8 @@ namespace Shortener.Service.Controllers.Api
             }
         }
 
-        [HttpPost]
-        public IActionResult CreateContact([FromBody] UrlData url)
+        [HttpPost("shorten")]
+        public IActionResult ShortenUrl([FromBody] UrlData url)
         {
             if (url == null)
                 return BadRequest();
@@ -69,9 +69,7 @@ namespace Shortener.Service.Controllers.Api
                 var newEntry = new UrlData { Url = url.Url };
                 var id = db.Insert(newEntry);
 
-                var shortenUrl = _urlHelper.GetShortUrl(id.AsInt32);
-                
-                // To do - Konstruirati pravi link
+                var shortenUrl = $"{this.Request.Scheme}://{this.Request.Host}/{_urlHelper.GetShortUrl(id.AsInt32)}";
 
                 return Created("shortUrl", shortenUrl);
             }
