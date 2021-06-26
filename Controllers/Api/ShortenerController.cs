@@ -46,6 +46,9 @@ namespace Shortener.Service.Controllers.Api
                 var id = _urlHelper.GetId(shortUrl);
                 var entry = db.Find(p => p.Id == id).FirstOrDefault();
 
+                if (entry == null)
+                    return NotFound();
+
                 var urlDataDto = _mapper.Map<UrlDataDto>(entry);
 
                 return Ok(urlDataDto);
