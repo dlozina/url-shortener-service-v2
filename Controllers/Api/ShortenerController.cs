@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using AutoMapper;
+using LiteDB;
 using log4net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,16 @@ namespace Shortener.Service.Controllers.Api
         private readonly IUrls _urls;
         private readonly IUrlHelper _urlHelper;
         private readonly ILiteDatabase _context;
+        private readonly IMapper _mapper;
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ShortenerController(IUrls urls, IUrlHelper urlHelper, ILiteDatabase context)
+        public ShortenerController(IUrls urls, IUrlHelper urlHelper, ILiteDatabase context, IMapper mapper)
         {
             _urls = urls;
             _urlHelper = urlHelper;
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("{shortUrl}")]
@@ -41,8 +44,9 @@ namespace Shortener.Service.Controllers.Api
             {
                 var db = _context.GetCollection<UrlData>();
                 var id = _urlHelper.GetId(shortUrl);
+                var entry = db.Find(p => p.Id == id).FirstOrDefault();
 
-                UrlDataDto urlDataDto = new UrlDataDto() { Url = db.Find(p => p.Id == id).FirstOrDefault().Url };
+                var urlDataDto = _mapper.Map<UrlDataDto>(entry);
 
                 return Ok(urlDataDto);
             }
@@ -54,7 +58,7 @@ namespace Shortener.Service.Controllers.Api
         }
 
         [HttpPost("shorten")]
-        public IActionResult ShortenUrl([FromBody] UrlData url)
+        public IActionResult ShortenUrl([FromBody] UrlDataDto url)
         {
             if (url == null)
                 return BadRequest();
@@ -68,7 +72,11 @@ namespace Shortener.Service.Controllers.Api
             try
             {
                 var db = _context.GetCollection<UrlData>(BsonAutoId.Int32);
-                var newEntry = new UrlData { Url = url.Url };
+                var newEntry = new UrlData 
+                { 
+                    Url = url.Url,
+                    ShorteningDateTime = DateTime.Now
+                };
                 var id = db.Insert(newEntry);
                 
                 UrlDataDto urlDataDto = new UrlDataDto() { Url = $"{this.Request.Scheme}://{this.Request.Host}/{_urlHelper.GetShortUrl(id.AsInt32)}" };

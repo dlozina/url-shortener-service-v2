@@ -36,13 +36,13 @@ namespace Shortener.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             // Add LiteDB
             services.AddSingleton<ILiteDatabase, LiteDatabase>(_ => new LiteDatabase("shortner-service.db"));
             services.AddScoped<IUrlHelper, UrlHelper>();
             services.AddScoped<IUrls, Urls>();
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(c =>
             {
