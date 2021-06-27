@@ -10,6 +10,7 @@ using Shortener.Service.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using IUrlHelper = Shortener.Service.Services.Interface.IUrlHelper;
@@ -21,17 +22,21 @@ namespace Shortener.Service.Controllers.Api
     {
         private readonly IUrls _urls;
         private readonly IUrlHelper _urlHelper;
+        private readonly ISendSms _sendSms;
         private readonly ILiteDatabase _context;
         private readonly IMapper _mapper;
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public ShortenerController(IUrls urls, IUrlHelper urlHelper, ILiteDatabase context, IMapper mapper)
+        string targetUrl = "infobip.com";
+
+        public ShortenerController(IUrls urls, IUrlHelper urlHelper, ISendSms sendSms, ILiteDatabase context, IMapper mapper)
         {
             _urls = urls;
             _urlHelper = urlHelper;
             _context = context;
             _mapper = mapper;
+            _sendSms = sendSms;
         }
 
         [HttpGet("{shortUrl}")]
@@ -51,6 +56,7 @@ namespace Shortener.Service.Controllers.Api
 
                 var urlDataDto = _mapper.Map<UrlDataDto>(entry);
 
+                //return RedirectPermanent(urlDataDto.Url);
                 return Ok(urlDataDto);
             }
             catch (Exception ex)
@@ -61,12 +67,12 @@ namespace Shortener.Service.Controllers.Api
         }
 
         [HttpPost("shorten")]
-        public IActionResult ShortenUrl([FromBody] UrlDataDto url)
+        public IActionResult ShortenUrl([FromBody] UrlDataDto longUrl)
         {
-            if (url == null)
+            if (longUrl == null)
                 return BadRequest();
 
-            if (!Uri.TryCreate(url.Url, UriKind.Absolute, out Uri result))
+            if (!Uri.TryCreate(longUrl.Url, UriKind.Absolute, out Uri result))
                 ModelState.AddModelError("URL", "URL shouldn't be empty");
 
             if (!ModelState.IsValid)
@@ -77,13 +83,19 @@ namespace Shortener.Service.Controllers.Api
                 var db = _context.GetCollection<UrlData>(BsonAutoId.Int32);
                 var newEntry = new UrlData 
                 { 
-                    Url = url.Url,
+                    Url = longUrl.Url,
                     ShorteningDateTime = DateTime.Now
                 };
                 var id = db.Insert(newEntry);
                 
                 UrlDataDto urlDataDto = new UrlDataDto() { Url = $"{this.Request.Scheme}://{this.Request.Host}/{_urlHelper.GetShortUrl(id.AsInt32)}" };
 
+                if (longUrl.Url.Contains(targetUrl))
+                {
+                    log.Info("Target URL is: " + targetUrl);
+                    _sendSms.NotifyTargetUrlIsShortened();
+                }
+                
                 return Created("shortUrl", urlDataDto);
             }
             catch (Exception ex)

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using IUrlHelper = Shortener.Service.Services.Interface.IUrlHelper;
@@ -42,6 +43,7 @@ namespace Shortener.Service
             services.AddSingleton<ILiteDatabase, LiteDatabase>(_ => new LiteDatabase("shortner-service.db"));
             services.AddScoped<IUrlHelper, UrlHelper>();
             services.AddScoped<IUrls, Urls>();
+            services.AddScoped<ISendSms, SendSms>();
             services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(c =>
