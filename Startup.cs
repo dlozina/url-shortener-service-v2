@@ -41,8 +41,8 @@ namespace Shortener.Service
 
             // Add LiteDB
             services.AddSingleton<ILiteDatabase, LiteDatabase>(_ => new LiteDatabase("shortner-service.db"));
+            services.AddScoped<IDbContext, DbContext>();
             services.AddScoped<IUrlHelper, UrlHelper>();
-            services.AddScoped<IUrls, Urls>();
             services.AddScoped<ISendSms, SendSms>();
             services.AddAutoMapper(typeof(Startup));
 

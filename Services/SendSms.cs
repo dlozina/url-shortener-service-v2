@@ -9,6 +9,8 @@ using Infobip.Api.Client;
 using log4net;
 using System.Reflection;
 using Shortener.Service.Services.Interface;
+using LiteDB;
+using Shortener.Service.Model;
 
 namespace Shortener.Service.Services
 {
@@ -18,7 +20,13 @@ namespace Shortener.Service.Services
         string apiKeyPrefix = "App";
         string apiKey = "19b077f413e61e62a6478b1b2813790f-11e8558b-a296-46b1-9f47-cd163f7a4108";
 
+        private readonly ILiteDatabase _context;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public SendSms(ILiteDatabase context)
+        {
+            _context = context;
+        }
 
         public void NotifyTargetUrlIsShortened()
         {
@@ -60,6 +68,23 @@ namespace Shortener.Service.Services
                 log.Warn(apiException.ErrorContent);
             }
             log.Info("SMS send - Finished");
+        }
+
+        public void SendDailyNotification()
+        {
+            var db = _context.GetCollection<UrlData>();
+            var id = 12;
+            var entry = db.Find(p => p.Id == id).FirstOrDefault();
+        }
+
+        public void SendWeeklyReportNotification()
+        {
+
+        }
+
+        public void SendMonthlyReportNotification()
+        {
+
         }
     }
 }
