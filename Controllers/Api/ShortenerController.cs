@@ -39,8 +39,6 @@ namespace Shortener.Service.Controllers.Api
 
             try
             {
-                _sendSms.SendDailyNotification();
-
                 var id = _urlHelper.GetId(shortUrl);
                 var urlData = _dbContext.GetUrl(id);
 
@@ -73,10 +71,16 @@ namespace Shortener.Service.Controllers.Api
 
             try
             {
+                if(_dbContext.CheckIfUrlExists(longUrl.Url))
+                    ModelState.AddModelError("Url", "Url is allready shortened");
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 var newEntry = new UrlData
                 {
                     Url = longUrl.Url,
-                    ShorteningDateTime = DateTime.Now
+                    ShorteningDateTime = DateTime.Now.Date
                 };
 
                 var id = _dbContext.AddUrl(newEntry);

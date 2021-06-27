@@ -11,5 +11,7 @@ namespace Shortener.Service.Services.Interface
         int AddUrl(UrlData urlData);
 
         UrlData GetUrl(int id);
+
+        bool CheckIfUrlExists(string longUrl);
     }
 }

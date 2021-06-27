@@ -29,5 +29,16 @@ namespace Shortener.Service.Services
 
             return entry;
         }
+
+        public bool CheckIfUrlExists(string longUrl)
+        {
+            bool exists = false;
+            var db = _context.GetCollection<UrlData>();
+            exists = db.Query()
+                .Where(x => x.Url.Equals(longUrl))
+                .Exists();
+
+            return exists;
+        }
     }
 }
