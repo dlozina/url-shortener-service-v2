@@ -6,8 +6,8 @@
 
         void SendDailyNotification();
 
-        void SendWeeklyReportNotification();
+        void SendWeeklyNotification();
 
-        void SendMonthlyReportNotification();
+        void SendMonthlyNotification();
     }
 }

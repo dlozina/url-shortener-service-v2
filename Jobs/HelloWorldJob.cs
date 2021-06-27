@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Quartz;
 using System.Threading.Tasks;
-
 
 namespace Shortener.Service.Jobs
 {
@@ -12,6 +8,7 @@ namespace Shortener.Service.Jobs
     public class HelloWorldJob : IJob
     {
         private readonly ILogger<HelloWorldJob> _logger;
+
         public HelloWorldJob(ILogger<HelloWorldJob> logger)
         {
             _logger = logger;
@@ -19,7 +16,7 @@ namespace Shortener.Service.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation("Hello world!");
+            _logger.LogInformation("Hello Infobip engineer! I am waiting to short some URLs :)");
             return Task.CompletedTask;
         }
     }

@@ -38,39 +38,33 @@ namespace Shortener.Service.Services
             SendNotificationSms(smsNotificationMessage);
         }
 
-        
-
         public void SendDailyNotification()
         {
             DateTime localDate = DateTime.Now.Date;
             var db = _context.GetCollection<UrlData>();
-            //var entries = db.Find(p => p.ShorteningDateTime.Equals(localDate));
             var results = db.Query()
                 .Where(x => x.ShorteningDateTime.Equals(localDate)).ToList();
             var dailyShorteningResults = CountShortenings(results);
 
             var smsNotificationMessage = $"Report for {localDate}. Number of URL shortenings: {dailyShorteningResults}.";
-            //SendNotificationSms(smsNotificationMessage);
+            SendNotificationSms(smsNotificationMessage);
         }
 
-        public void SendWeeklyReportNotification()
+        public void SendWeeklyNotification()
         {
             DateTime localDate = DateTime.Now.Date;
             DateTime weekbefore = localDate.AddDays(-7);
 
             var db = _context.GetCollection<UrlData>();
-            //var entries = db.Find(p => p.ShorteningDateTime >= weekbefore && p.ShorteningDateTime <= localDate);
             var results = db.Query()
                 .Where(x => x.ShorteningDateTime >= weekbefore && x.ShorteningDateTime <= localDate).ToList();
             var dailyShorteningResults = CountShortenings(results);
 
             var smsNotificationMessage = $"Report for previous week. Number of URL shortenings: {dailyShorteningResults}.";
-            // SendNotificationSms(smsNotificationMessage);
+            SendNotificationSms(smsNotificationMessage);
         }
 
-        
-
-        public void SendMonthlyReportNotification()
+        public void SendMonthlyNotification()
         {
             DateTime localDate = DateTime.Now.Date;
             DateTime monthBefore = localDate.AddMonths(-1);
@@ -78,13 +72,12 @@ namespace Shortener.Service.Services
             var endDate = startDate.AddMonths(1).AddDays(-1);
 
             var db = _context.GetCollection<UrlData>();
-            //var entries = db.Find(p => p.ShorteningDateTime >= startDate && p.ShorteningDateTime <= endDate);
             var results = db.Query()
                 .Where(x => x.ShorteningDateTime >= startDate && x.ShorteningDateTime <= endDate).ToList();
             var dailyShorteningResults = CountShortenings(results);
 
             var smsNotificationMessage = $"Report for previous month. Number of URL shortenings: {dailyShorteningResults}.";
-            // SendNotificationSms(smsNotificationMessage);
+            SendNotificationSms(smsNotificationMessage);
         }
 
         private void SendNotificationSms(string smsNotificationMessage)
