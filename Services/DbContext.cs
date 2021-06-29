@@ -25,7 +25,9 @@ namespace Shortener.Service.Services
         public UrlData GetUrl(int id)
         {
             var db = _context.GetCollection<UrlData>();
-            var entry = db.Find(p => p.Id == id).FirstOrDefault();
+            var entry = db.Query()
+                .Where(x => x.Id.Equals(id))
+                .ToList().FirstOrDefault();
 
             return entry;
         }

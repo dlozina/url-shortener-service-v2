@@ -3,6 +3,8 @@ using Infobip.Api.Client.Api;
 using Infobip.Api.Client.Model;
 using LiteDB;
 using log4net;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Shortener.Service.Model;
 using Shortener.Service.Services.Interface;
 using System;
@@ -14,27 +16,24 @@ namespace Shortener.Service.Services
 {
     public class SendSms : ISendSms
     {
-        // Infobip api authentication
-        private string basePath = "https://19pww9.api.infobip.com";
-
-        private string apiKeyPrefix = "App";
-        private string apiKey = "19b077f413e61e62a6478b1b2813790f-11e8558b-a296-46b1-9f47-cd163f7a4108";
-
-        // Sms settings
-        private string notificationSmsNumber = "385958165678";
-        private string from = "InfoSMS";
-
         private readonly ILiteDatabase _context;
+        private readonly IConfiguration _config;
+        // FileStream Log
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // Console log
+        private readonly ILogger<SendSms> _logger;
 
-        public SendSms(ILiteDatabase context)
+        public SendSms(ILiteDatabase context, IConfiguration config, ILogger<SendSms> logger)
         {
             _context = context;
+            _config = config;
+            _logger = logger;
         }
 
         public void NotifyTargetUrlIsShortened()
         {
             var smsNotificationMessage = "Targeted url has been shortened. (infobip.com)";
+            _logger.LogInformation("Target Url is shortened => Sms send start");
             SendNotificationSms(smsNotificationMessage);
         }
 
@@ -47,6 +46,7 @@ namespace Shortener.Service.Services
             var dailyShorteningResults = CountShortenings(results);
 
             var smsNotificationMessage = $"Report for {localDate}. Number of URL shortenings: {dailyShorteningResults}.";
+            _logger.LogInformation($"Report for {localDate}. => Sms send start");
             SendNotificationSms(smsNotificationMessage);
         }
 
@@ -61,6 +61,7 @@ namespace Shortener.Service.Services
             var dailyShorteningResults = CountShortenings(results);
 
             var smsNotificationMessage = $"Report for previous week. Number of URL shortenings: {dailyShorteningResults}.";
+            _logger.LogInformation($"Report for previous week. => Sms send start");
             SendNotificationSms(smsNotificationMessage);
         }
 
@@ -77,6 +78,7 @@ namespace Shortener.Service.Services
             var dailyShorteningResults = CountShortenings(results);
 
             var smsNotificationMessage = $"Report for previous month. Number of URL shortenings: {dailyShorteningResults}.";
+            _logger.LogInformation($"Report for previous month. => Sms send start");
             SendNotificationSms(smsNotificationMessage);
         }
 
@@ -85,18 +87,18 @@ namespace Shortener.Service.Services
             log.Info("SMS send - Start");
             var configuration = new Configuration()
             {
-                BasePath = basePath,
-                ApiKeyPrefix = apiKeyPrefix,
-                ApiKey = apiKey
+                BasePath = _config["InfobipApi:BasePath"],
+                ApiKeyPrefix = _config["InfobipApi:ApiKeyPrefix"],
+                ApiKey = _config["InfobipApi:ApiKey"]
             };
             var sendSmsApi = new SendSmsApi(configuration);
 
             var smsMessage = new SmsTextualMessage()
             {
-                From = from,
+                From = _config["SmsSettings:From"],
                 Destinations = new List<SmsDestination>()
                 {
-                    new SmsDestination(to: notificationSmsNumber)
+                    new SmsDestination(to: _config["SmsSettings:NotificationSmsNumber"])
                 },
                 Text = smsNotificationMessage
             };
@@ -119,6 +121,7 @@ namespace Shortener.Service.Services
                 log.Warn(apiException.Headers);
                 log.Warn(apiException.ErrorContent);
             }
+            _logger.LogInformation("Sms send => Finished");
             log.Info("SMS send - Finished");
         }
 

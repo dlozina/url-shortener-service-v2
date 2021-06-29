@@ -10,9 +10,9 @@ namespace Shortener.Service.Jobs
     public class SendWeeklyNotification : IJob
     {
         private readonly ISendSms _sendSms;
-        private readonly ILogger<HelloWorldJob> _logger;
+        private readonly ILogger<SendWeeklyNotification> _logger;
 
-        public SendWeeklyNotification(ILogger<HelloWorldJob> logger, ISendSms sendSms)
+        public SendWeeklyNotification(ILogger<SendWeeklyNotification> logger, ISendSms sendSms)
         {
             _logger = logger;
             _sendSms = sendSms;

@@ -34,7 +34,6 @@ namespace Shortener.Service
                         // Add periodical/scheduled jobs
                         // Time definition is in appsettings
                         // https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontriggers.html
-                        q.AddJobAndTrigger<HelloWorldJob>(hostContext.Configuration);
                         // Daily - MON-SUN on 08:00 CET for the previous day => Cron expression: "0 0 8 ? * MON-SUN"
                         q.AddJobAndTrigger<SendDailyNotification>(hostContext.Configuration);
                         // Weekly - MON on 08:01 CET for the past week => Cron expression: "0 1 8 ? * MON"

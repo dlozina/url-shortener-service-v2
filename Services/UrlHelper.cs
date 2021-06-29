@@ -19,16 +19,16 @@ namespace Shortener.Service.Services
         public string GetShortUrl(int id)
         {
             //Possible solution
-            //return WebEncoders.Base64UrlEncode(BitConverter.GetBytes(id));
-            return Encode(id);
+            return WebEncoders.Base64UrlEncode(BitConverter.GetBytes(id));
+            //return Encode(id);
         }
 
         // Reverse short url text back into an interger Id
         public int GetId(string shortUrl)
         {
             //Possible solution
-            //return BitConverter.ToInt32(WebEncoders.Base64UrlDecode(shortUrl));
-            return Decode(shortUrl);
+            return BitConverter.ToInt32(WebEncoders.Base64UrlDecode(shortUrl));
+            //return Decode(shortUrl);
         }
 
         private string Encode(int num)
