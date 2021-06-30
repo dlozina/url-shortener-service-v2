@@ -22,7 +22,7 @@ namespace Shortener.Service.Controllers.Api
         private readonly IMapper _mapper;
         // FileStream Log
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        // Console log - Just to be user more friendly // Debug
+        // Console log - Just to be more user friendly // Debug
         private readonly ILogger<ShortenerController> _logger;
 
         private string targetUrl = "infobip.com";
