@@ -2,7 +2,7 @@
 POC API service that serves to shorten URLs
 
 Project arhitecture:
-![Project Arhitecture](https://user-images.githubusercontent.com/28594128/123982511-63bb4700-d9c3-11eb-9131-13c4ade16055.png)
+![Project Arhitecture](https://user-images.githubusercontent.com/28594128/123985300-a67e1e80-d9c5-11eb-8895-796bfb9ecf12.png)
 
 API endpoints:
 
