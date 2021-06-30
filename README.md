@@ -9,7 +9,7 @@ API endpoints:
 | HTTP method   | POST            |
 | :---          | :---            | 
 | URI           | /shorten        |
-| Request Body  | Example:{ url: “http://stackoverflow.com/questions/1567929/website-safe-data- accessarchitecture-question?rq=1“ }|
+| Request Body  | Example:{ url: “http://stackoverflow.com/questions/1567929/website-safe-data-accessarchitecture-question?rq=1“ }|
 | Reponse Type  | application/json|
 | Response  | Example: { shortUrl: “http://yourservice.com/xYzw3b“ }|
 
@@ -17,7 +17,7 @@ API endpoints:
 | :---          | :---            | 
 | URI           | /{hash}      |
 | Reponse Type  | application/json|
-| Response  | Example:{ url: “http://stackoverflow.com/questions/1567929/website-safe-data- accessarchitecture-question?rq=1“ }|
+| Response  | Example:{ url: “http://stackoverflow.com/questions/1567929/website-safe-data-accessarchitecture-question?rq=1“ }|
 
 
 Swagger Test UI:
