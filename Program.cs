@@ -24,6 +24,8 @@ namespace Shortener.Service
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    // Add selfhost port for demo
+                    webBuilder.UseUrls("http://localhost:8000");
                 })
                 .ConfigureServices((hostContext, services) =>
                 {

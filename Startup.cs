@@ -67,7 +67,8 @@ namespace Shortener.Service
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shortener.Service v1"));
             }
 
-            app.UseHttpsRedirection();
+            // Remove https for demo
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
