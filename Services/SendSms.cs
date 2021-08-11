@@ -58,9 +58,9 @@ namespace Shortener.Service.Services
             var db = _context.GetCollection<UrlData>();
             var results = db.Query()
                 .Where(x => x.ShorteningDateTime >= weekbefore && x.ShorteningDateTime <= localDate).ToList();
-            var dailyShorteningResults = CountShortenings(results);
+            var weeklyShorteningResults = CountShortenings(results);
 
-            var smsNotificationMessage = $"Report for previous week. Number of URL shortenings: {dailyShorteningResults}.";
+            var smsNotificationMessage = $"Report for previous week. Number of URL shortenings: {weeklyShorteningResults}.";
             _logger.LogInformation($"Report for previous week. => Sms send start");
             SendNotificationSms(smsNotificationMessage);
         }
@@ -75,9 +75,9 @@ namespace Shortener.Service.Services
             var db = _context.GetCollection<UrlData>();
             var results = db.Query()
                 .Where(x => x.ShorteningDateTime >= startDate && x.ShorteningDateTime <= endDate).ToList();
-            var dailyShorteningResults = CountShortenings(results);
+            var monthlyShorteningResults = CountShortenings(results);
 
-            var smsNotificationMessage = $"Report for previous month. Number of URL shortenings: {dailyShorteningResults}.";
+            var smsNotificationMessage = $"Report for previous month. Number of URL shortenings: {monthlyShorteningResults}.";
             _logger.LogInformation($"Report for previous month. => Sms send start");
             SendNotificationSms(smsNotificationMessage);
         }
@@ -127,11 +127,11 @@ namespace Shortener.Service.Services
 
         private int CountShortenings(List<UrlData> results)
         {
-            int dailyShorteningResults = 0;
+            int shorteningResults = 0;
             if (results.Any())
-                dailyShorteningResults = results.Count();
+                shorteningResults = results.Count();
 
-            return dailyShorteningResults;
+            return shorteningResults;
         }
     }
 }
