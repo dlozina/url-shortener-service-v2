@@ -1,5 +1,7 @@
-# url-shortener-service
-POC API service that serves to shorten URLs
+# url-shortener-service 2
+
+POC API service that serves to shorten URLs.
+In this second version of url shortener I want to refactor my API controller and add PostGreSQL insted of NoSQL (LiteDB) database.
 
 Project arhitecture:
 ![Project Arhitecture](https://user-images.githubusercontent.com/28594128/123985300-a67e1e80-d9c5-11eb-8895-796bfb9ecf12.png)
