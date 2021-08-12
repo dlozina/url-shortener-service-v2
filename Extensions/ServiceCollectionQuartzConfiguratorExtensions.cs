@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shortener.Service.Extension
+namespace Shortener.Service.Extensions
 {
     public static class ServiceCollectionQuartzConfiguratorExtensions
     {

@@ -1,14 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Quartz;
+using Shortener.Service.Extensions;
 using Shortener.Service.Jobs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Shortener.Service.Extension;
 
 namespace Shortener.Service
 {

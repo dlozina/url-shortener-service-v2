@@ -3,22 +3,15 @@ using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Shortener.Service.Extensions;
 using Shortener.Service.Services;
 using Shortener.Service.Services.Interface;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 using IUrlHelper = Shortener.Service.Services.Interface.IUrlHelper;
 
 namespace Shortener.Service
@@ -44,6 +37,7 @@ namespace Shortener.Service
             services.AddScoped<IDbContext, DbContext>();
             services.AddScoped<IUrlHelper, UrlHelper>();
             services.AddScoped<ISendSms, SendSms>();
+            services.AddScoped<IControllerService, ControllerService>();
             services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(c =>
@@ -66,6 +60,8 @@ namespace Shortener.Service
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shortener.Service v1"));
             }
+
+            app.ConfigureExceptionHandler(log);
 
             // Remove https for demo
             //app.UseHttpsRedirection();
