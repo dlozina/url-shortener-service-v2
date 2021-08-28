@@ -26,7 +26,7 @@ namespace Shortener.Service
                     services.AddQuartz(q =>
                     {
                         q.UseMicrosoftDependencyInjectionScopedJobFactory();
-
+                        //
                         // Add periodical/scheduled jobs
                         // Time definition is in appsettings
                         // https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontriggers.html
