@@ -353,3 +353,4 @@ healthchecksdb
 # Ignore db change files
 shortner-service-log.db
 shortner-service.db
+/.DS_Store

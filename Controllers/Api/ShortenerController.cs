@@ -11,7 +11,6 @@ namespace Shortener.Service.Controllers.Api
     public class ShortenerController : ControllerBase
     {
         private readonly IControllerService _controllerService;
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public ShortenerController(IControllerService controllerService)
         {
