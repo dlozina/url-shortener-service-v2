@@ -27,7 +27,7 @@ namespace Shortener.Service.Extensions
                 throw new Exception($"No Quartz.NET Cron schedule found for job in configuration at {configKey}");
             }
 
-            // register the job as before
+            // register the job
             var jobKey = new JobKey(jobName);
             quartz.AddJob<T>(opts => opts.WithIdentity(jobKey));
 

@@ -32,8 +32,8 @@ namespace Shortener.Service.Controllers.Api
 
             if (userAgentBrowser)
                 return RedirectPermanent(urlDataDto.Url);
-            else
-                return Ok(urlDataDto);
+            
+            return Ok(urlDataDto);
         }
 
         [HttpPost("shorten")]
