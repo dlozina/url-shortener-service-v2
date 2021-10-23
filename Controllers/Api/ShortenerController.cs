@@ -1,9 +1,7 @@
-﻿using log4net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shortener.Service.DTO;
 using Shortener.Service.Services.Interface;
 using System;
-using System.Reflection;
 
 namespace Shortener.Service.Controllers.Api
 {

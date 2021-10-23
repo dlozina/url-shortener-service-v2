@@ -14,12 +14,13 @@ namespace Shortener.Service.Services
         private IMapper _mapper;
         private readonly ISendSms _sendSms;
         private readonly ILogger<ControllerService> _logger;
-
+        
+        // To expand project target url should be moved to DB or at least settings
         private string targetUrl = "infobip.com";
 
-        public ControllerService(IDbContext urls, IUrlHelper urlHelper, IMapper mapper, ISendSms sendSms, ILogger<ControllerService> logger)
+        public ControllerService(IDbContext dbContext, IUrlHelper urlHelper, IMapper mapper, ISendSms sendSms, ILogger<ControllerService> logger)
         {
-            _dbContext = urls;
+            _dbContext = dbContext;
             _urlHelper = urlHelper;
             _mapper = mapper;
             _sendSms = sendSms;
@@ -45,7 +46,7 @@ namespace Shortener.Service.Services
 
             var id = _dbContext.AddUrl(newEntry);
             UrlDataDto responseUrlDataDto = new UrlDataDto() { Url = $"{requestScheme}://{requestHost}/{_urlHelper.GetShortUrl(id)}" };
-
+            
             NotifyTargetUrlIsShortened(responseUrlDataDto);
 
             return responseUrlDataDto;
